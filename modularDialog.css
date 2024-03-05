@@ -1,0 +1,19 @@
+
+#dialog-level:has(.dialog-wrapper) {}
+
+.dialog-wrapper {}
+
+.dialog-wrapper hr {}
+
+.dialog-title {}
+.dialog-description {}
+.dialog-inputs-wrapper {}
+.dialog-options-wrapper {}
+.dialog-options-button {}
+.dialog-options-buttonAbort {}
+.dialog-options-buttonComplete {}
+
+.dialog-input {}
+.dialog-input-field {}
+.dialog-input-title {}
+.dialog-input-description {}
