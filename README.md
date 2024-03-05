@@ -45,5 +45,7 @@ attributes : { } [all HTML attributes to apply to the input, format: {"attrName"
 ```
 
 Default options:
-- completeDialog - returns an `HTMLCollection<HTMLInputElement>` containing the dialog inputs, so their value can be read
+- completeDialog - returns an `object` in which:
+  - the keys correspond to the ones in the `structure.inputs` field
+  - the values hold the dialog's `HTMLInput` elements, so that their value can be read
 - abortDialog - returns `null`

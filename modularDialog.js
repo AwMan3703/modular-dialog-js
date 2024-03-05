@@ -33,7 +33,9 @@ Input data:
     attributes : { } [all HTML attributes to apply to the input, format: {"attrName" : "attrValue"}]
 
 Default options:
-    completeDialog - returns an `HTMLCollection<HTMLInputElement>` containing the dialog inputs, so their value can be read
+    completeDialog - returns an object in which:
+        - the keys correspond to the ones in the <inputs> field
+        - the values hold the dialog's HTMLInput elements, so that their value can be read
     abortDialog - returns null
 */
 function Dialog(parent, structure) {
@@ -59,11 +61,14 @@ function Dialog(parent, structure) {
     addhr()
 
     // Build the input fields
+    const inputMap = {} // structure.inputs.[name] -> HTMLInputElement.id
     const inputsClass = `${wrapper.id}-input-field`
     const inputs = document.createElement("div")
     inputs.className = "dialog-inputs-wrapper"
     for (const [name, options] of Object.entries(structure.inputs)) {
-        inputs.appendChild(createInputField(inputsClass, name, options.description, options.type, options.defaultValue, options.attributes))
+        const id = `dialog-input-${name}-${crypto.randomUUID()}`
+        inputMap[name] = id
+        inputs.appendChild(createInputField(id, inputsClass, name, options.description, options.type, options.defaultValue, options.attributes))
     }
     wrapper.appendChild(inputs)
 
@@ -89,7 +94,11 @@ function Dialog(parent, structure) {
     optionComplete.className = "dialog-options-button dialog-options-buttonComplete"
     optionComplete.innerText = structure.options.completeDialog.label
     optionComplete.onclick = () => {
-        callbackWrapper(() => { structure.options.completeDialog.callback(document.getElementsByClassName(inputsClass)) })
+        const results = {}
+        for (const [name, id] of Object.entries(inputMap)) {
+            results[name] = document.getElementById(id)
+        }
+        callbackWrapper(() => { structure.options.completeDialog.callback(results) })
     }
     options.appendChild(optionComplete)
 
@@ -103,7 +112,7 @@ function Dialog(parent, structure) {
 // Utility
 /* --------------------------- */
 
-const createInputField = (class_string, title_string, description_string, type, default_, attributes) => {
+const createInputField = (id, class_string, title_string, description_string, type, default_, attributes) => {
     const wrapper = document.createElement("div")
     wrapper.className = "dialog-input"
 
@@ -111,7 +120,7 @@ const createInputField = (class_string, title_string, description_string, type, 
     input.className = `${class_string} dialog-input-field`
     input.type = type
     input.value = default_
-    input.id = `dialog-input-${title_string}-${crypto.randomUUID()}`
+    input.id = id
     if (isObject(attributes)) for (const [k, v] of Object.entries(attributes)) {
         input.setAttribute(k, v)
     }
