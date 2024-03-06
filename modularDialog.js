@@ -69,7 +69,7 @@ function Dialog(parent, structure) {
     const inputsClass = `${wrapper.id}-input-field`
     const inputs = document.createElement("div")
     inputs.className = "dialog-inputs-wrapper"
-    if (isObject(inputs)) for (const [name, options] of Object.entries(structure.inputs)) {
+    if (isObject(structure.inputs)) for (const [name, options] of Object.entries(structure.inputs)) {
         const id = `dialog-input-${name}-${crypto.randomUUID()}`
         inputMap[name] = id
         inputs.appendChild(createInputField(id, inputsClass, name, options.description, options.type, options.defaultValue, options.attributes))
@@ -94,17 +94,21 @@ function Dialog(parent, structure) {
     }
     options.appendChild(optionAbort)
 
-    const optionComplete = document.createElement("button")
-    optionComplete.className = "dialog-options-button dialog-options-buttonComplete"
-    optionComplete.innerText = structure.options.completeDialog.label
-    optionComplete.onclick = () => {
-        const results = {}
-        for (const [name, id] of Object.entries(inputMap)) {
-            results[name] = document.getElementById(id)
+    if (isObject(structure.options.completeDialog)) {
+        const optionComplete = document.createElement("button")
+        optionComplete.className = "dialog-options-button dialog-options-buttonComplete"
+        optionComplete.innerText = structure.options.completeDialog.label
+        optionComplete.onclick = () => {
+            const results = {}
+            for (const [name, id] of Object.entries(inputMap)) {
+                results[name] = document.getElementById(id)
+            }
+            callbackWrapper(() => {
+                structure.options.completeDialog.callback(results)
+            })
         }
-        callbackWrapper(() => { structure.options.completeDialog.callback(results) })
+        options.appendChild(optionComplete)
     }
-    options.appendChild(optionComplete)
 
     // Wrap options together
     wrapper.appendChild(options)
