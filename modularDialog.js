@@ -33,10 +33,11 @@ Input data:
     attributes : { } [all HTML attributes to apply to the input, format: {"attrName" : "attrValue"}]
 
 Default options:
-    completeDialog - returns an object in which:
+    completeDialog - calls the callback function, passing an object in which:
         - the keys correspond to the ones in the <inputs> field
         - the values hold the dialog's HTMLInput elements, so that their value can be read
-    abortDialog - returns null
+    abortDialog - calls the callback function, passing null
+
 */
 function Dialog(parent, structure) {
     const addhr = () => wrapper.appendChild(document.createElement("hr"))
