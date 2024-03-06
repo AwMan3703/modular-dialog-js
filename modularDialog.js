@@ -39,7 +39,6 @@ Default options:
     abortDialog - returns null
 */
 function Dialog(parent, structure) {
-    if (!structure.title) throw new Error("Malformed dialog structure - required field <title> missing")
     const addhr = () => wrapper.appendChild(document.createElement("hr"))
 
     const wrapper = document.createElement("div")
@@ -123,7 +122,7 @@ const createInputField = (id, class_string, title_string, description_string, ty
     const input = document.createElement("input")
     input.className = `${class_string} dialog-input-field`
     input.type = type
-    input.value = default_
+    input.value = !isEmptyString(default_) ? default_ : null
     input.id = id
     if (isObject(attributes)) for (const [k, v] of Object.entries(attributes)) {
         input.setAttribute(k, v)
@@ -153,5 +152,7 @@ const isEmptyString = (str) => {return str===undefined || str.replace(/\s/g, '')
 const isObject = (obj) => typeof obj === 'object' && obj instanceof Object && !Array.isArray(obj) && obj.constructor !== Date;
 
 const firstLetterUpper = (text) => {return !isEmptyString(text) ? text[0].toUpperCase() + text.substring(1, text.length) : ""}
+
+const dialogParent = document.getElementById("dialog-level")
 
 /* --------------------------- */
