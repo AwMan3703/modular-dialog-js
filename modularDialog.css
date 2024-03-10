@@ -1,4 +1,6 @@
 
+#dialog-level:has(.dialog-wrapper) {}
+
 .dialog-wrapper {}
 
 .dialog-wrapper hr {}
