@@ -5,6 +5,9 @@ Custom modular HTML dialogs. Don't let the `window.prompt/alert/etc.` functions 
 - `modularDialog.js` - the library itself
 - `modularDialog.css` - template for styling the dialog
 ### Usage
+#### CSS
+Edit the modularDialog.css file to customize the dialog's appearance. If not edited, the dialog windows' styles will default to the browser's built-in.
+#### JavaScript
 The `Dialog()` functions takes two parameters:
 - `parent` - the node to append the dialog to
 - `structure` - an object defining the dialog's structure
