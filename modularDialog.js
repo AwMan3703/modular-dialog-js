@@ -131,7 +131,8 @@ const createInputField = (id, class_string, title_string, description_string, ty
     const wrapper = document.createElement("div")
     wrapper.className = "dialog-input"
 
-    const input = document.createElement("input")
+    const input = document.createElement(type==="textarea" ? "textarea" : "input")
+    if (type==="textarea") input.style.width = '90%'
     input.className = `${class_string} dialog-input-field`
     input.type = type
     input.value = !isEmptyString(default_) ? default_ : null
