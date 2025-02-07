@@ -28,7 +28,8 @@ Example:
 
 Input data:
     description : "<any string>" --optional
-    type : "text|number|checkbox|<whatever else...>"
+    type : "text|number|checkbox|<whatever else...>" (raw html can be used by setting the next value to true)
+    raw : true/false (whether the "type" field contains raw html)
     defaultValue : [default input value]
     attributes : { } [all HTML attributes to apply to the input, format: {"attrName" : "attrValue"}]
 
@@ -36,6 +37,8 @@ Default options:
     completeDialog - calls the callback function, passing an object in which:
         - the keys correspond to the ones in the <inputs> field
         - the values hold the dialog's HTMLInput elements, so that their value can be read
+        - NOTE THAT WHEN USING CUSTOM HTML AS AN INPUT'S TYPE, IT IS NOT GUARANTEED
+          THAT A VALUE CAN BE EXTRACTED FROM IT, so, for such inputs, the value may be null or undefined
     abortDialog - calls the callback function, passing null
 
 */
@@ -72,7 +75,11 @@ function Dialog(parent, structure) {
     if (isObject(structure.inputs)) for (const [name, options] of Object.entries(structure.inputs)) {
         const id = `dialog-input-${name}-${crypto.randomUUID()}`
         inputMap[name] = id
-        inputs.appendChild(createInputField(id, inputsClass, name, options.description, options.type, options.defaultValue, options.attributes))
+        if (options.raw) {
+            inputs.innerHTML += options.type
+        } else {
+            inputs.appendChild(createInputField(id, inputsClass, name, options.description, options.type, options.defaultValue, options.attributes))
+        }
     }
     wrapper.appendChild(inputs)
 
