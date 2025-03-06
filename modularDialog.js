@@ -1,4 +1,7 @@
 
+// List of elements that have a dialog attached
+const parents = []
+
 /*
 The Dialog() functions takes an object as parameter, which should define the dialog structure
 and what inputs the dialog needs to provide and return (see example below).
@@ -43,6 +46,14 @@ Default options:
 
 */
 function Dialog(parent, structure) {
+    if (parents.includes(parent)) {
+        console.error("Tried to append a dialog to an element that already had one",
+            `(${parent.tagName}${parent.id ? `#${parent.id}` : ''}${parent.classList.length > 0 ? `.${Array.from(parent.classList).join('.')}` : ''})`)
+        return false
+    } else {
+        parents.push(parent)
+    }
+
     const addhr = () => wrapper.appendChild(document.createElement("hr"))
 
     const wrapper = document.createElement("div")
@@ -89,6 +100,7 @@ function Dialog(parent, structure) {
     const callbackWrapper = (c) => {
         c()
         wrapper.remove()
+        parents.splice(parents.indexOf(parent), 1)
     }
     const options = document.createElement("div")
     options.className = "dialog-options-wrapper"
@@ -122,6 +134,8 @@ function Dialog(parent, structure) {
 
     // Append the dialog
     parent.appendChild(wrapper)
+
+    return true
 }
 
 // Utility
@@ -131,10 +145,8 @@ const createInputField = (id, class_string, title_string, description_string, ty
     const wrapper = document.createElement("div")
     wrapper.className = "dialog-input"
 
-    const input = document.createElement(type==="textarea" ? "textarea" : "input")
-    if (type==="textarea") input.style.width = '90%'
+    const input = document.createElement(type)
     input.className = `${class_string} dialog-input-field`
-    input.type = type
     input.value = !isEmptyString(default_) ? default_ : null
     input.id = id
     if (isObject(attributes)) for (const [k, v] of Object.entries(attributes)) {
